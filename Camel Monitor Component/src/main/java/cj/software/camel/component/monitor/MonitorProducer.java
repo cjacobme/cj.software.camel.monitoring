@@ -1,10 +1,7 @@
 package cj.software.camel.component.monitor;
 
-import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.Route;
 import org.apache.camel.impl.DefaultProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,31 +24,29 @@ public class MonitorProducer
 	@Override
 	public void process(Exchange pExchange) throws Exception
 	{
-		System.out.println("Endpoint Key                = " + this.endpoint.getEndpointKey());
-		System.out.println("Endpoint URI                = " + this.endpoint.getEndpointUri());
-		System.out.println("Endpoint ID                 = " + this.endpoint.getId());
-		System.out.println("Endpoint Name               = " + this.endpoint.getName());
-		System.out.println("Endpoint Option             = " + this.endpoint.getOption());
-		System.out.println("Camel-Context name          = " + pExchange.getContext().getName());
-		System.out.println(
-				"initiated route-id          = "
-						+ pExchange.getFromRouteId()
-						+ " (from-Endpoint="
-						+ pExchange.getFromEndpoint()
-						+ ")");
-		System.out.println(
-				"Route-ID                    = "
-						+ pExchange.getUnitOfWork().getRouteContext().getRoute().getId());
-		System.out.println("created timestamp           = " + pExchange.getCreated());
-		System.out.println("Exchange-ID                 = " + pExchange.getExchangeId());
-		this.printMessage("in", pExchange.getIn());
-		this.printMessage("out", pExchange.getOut());
-		System.out.println();
-
-		List<Route> lRoutes = pExchange.getContext().getRoutes();
-		for (Route bRoute : lRoutes)
+		synchronized (System.out)
 		{
-			System.out.println("      Route " + bRoute.getId());
+			System.out.println("Endpoint Key                = " + this.endpoint.getEndpointKey());
+			System.out.println("Endpoint URI                = " + this.endpoint.getEndpointUri());
+			System.out.println("Endpoint ID                 = " + this.endpoint.getId());
+			System.out.println("Endpoint Name               = " + this.endpoint.getName());
+			System.out.println("Endpoint Option             = " + this.endpoint.getOption());
+			System.out.println("Camel-Context name          = " + pExchange.getContext().getName());
+			System.out.println(
+					"initiated route-id          = "
+							+ pExchange.getFromRouteId()
+							+ " (from-Endpoint="
+							+ pExchange.getFromEndpoint()
+							+ ")");
+			System.out.println(
+					"Route-ID                    = "
+							+ pExchange.getUnitOfWork().getRouteContext().getRoute().getId());
+			System.out.println("created timestamp           = " + pExchange.getCreated());
+			System.out.println("Exchange-ID                 = " + pExchange.getExchangeId());
+			this.printMessage("in", pExchange.getIn());
+			this.printMessage("out", pExchange.getOut());
+			System.out.println();
+
 		}
 	}
 
