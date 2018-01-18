@@ -18,11 +18,13 @@ from ("direct:start")
 ### how things are stored
 It should be possible to store the exchange informations in several ways. Therefore, a data sink has to be registered in the camel context.
 
-1. print out on the console. This is suitable for unit tests
-2. use a logger. This is also suitable for unit tests
-3. save via JDBC and Hibernate.
+These implementations are possible:
+
+1. print out on the console. This is suitable for unit tests.
+2. use a logger. This is also suitable for unit tests.
+3. save via JDBC and Hibernate. In that case, one has to install a process that somehow deletes database records that are too old, because otherwise the disk space is wasted with too much data in the database. Nobody cares for the Log entries of my grandfather on Debug level!
 4. use Apache Cassandra
 
 One of the first things I'm going to try out is to use Apache Cassandra, because it is __very__ fast, and one can use an optional Parameter _Time to Live_ in each
-<tt>Insert</tt> statement. With this parameter provided, the database record is deleted from the database without any further action. 
+<tt>Insert</tt> statement. With this parameter provided, the database record is deleted from the database after a while without any further action. 
 
