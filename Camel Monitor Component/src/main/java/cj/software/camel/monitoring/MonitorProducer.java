@@ -23,6 +23,6 @@ public class MonitorProducer
 	public void process(Exchange pExchange) throws Exception
 	{
 		MonitoredExchange lMonitoredExchange = Converter.toMonitoredExchange(pExchange);
-		this.endpoint.getMonitor().monitor(lMonitoredExchange);
+		this.endpoint.getMonitor().monitor(this.endpoint, lMonitoredExchange);
 	}
 }

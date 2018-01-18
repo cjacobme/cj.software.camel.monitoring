@@ -29,7 +29,7 @@ public class MonitorComponentTest
 			{
 				from("direct:start")
 						.routeId("try")
-						.to("moni://bar?option=4711")
+						.to("moni://bar?option=4711&loggerName=start")
 						.log("${body}")
 						.to("mock:result")
 						.to("direct:step2");

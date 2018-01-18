@@ -29,6 +29,12 @@ public class MonitorEndpoint
 	@UriParam(defaultValue = "10")
 	private int option = 10;
 
+	@UriPath(name = "loggerName",
+			description = "Name of the logger if the LoggerMonitor is used",
+			defaultValue = "LoggerMonitor",
+			javaType = "java.lang.String")
+	private String loggerName = "LoggerMonitor";
+
 	// private Monitor monitor = new ConsoleMonitor(); // TODO read from registry
 	private Monitor monitor = new LoggerMonitor(); // TODO read from registry
 
@@ -95,5 +101,15 @@ public class MonitorEndpoint
 	public int getOption()
 	{
 		return this.option;
+	}
+
+	public String getLoggerName()
+	{
+		return this.loggerName;
+	}
+
+	public void setLoggerName(String pLoggerName)
+	{
+		this.loggerName = pLoggerName;
 	}
 }

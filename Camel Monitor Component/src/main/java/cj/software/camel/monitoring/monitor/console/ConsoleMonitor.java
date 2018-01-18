@@ -1,5 +1,6 @@
 package cj.software.camel.monitoring.monitor.console;
 
+import cj.software.camel.monitoring.MonitorEndpoint;
 import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.monitor.Monitor;
 
@@ -9,7 +10,7 @@ public class ConsoleMonitor
 {
 
 	@Override
-	public String monitor(MonitoredExchange pMonitoredEntity)
+	public String monitor(MonitorEndpoint pEndpoint, MonitoredExchange pMonitoredEntity)
 	{
 		synchronized (System.out)
 		{
