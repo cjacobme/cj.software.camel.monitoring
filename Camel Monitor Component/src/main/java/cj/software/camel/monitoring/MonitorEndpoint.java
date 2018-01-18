@@ -9,6 +9,9 @@ import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriPath;
 
+import cj.software.camel.monitoring.monitor.Monitor;
+import cj.software.camel.monitoring.monitor.console.ConsoleMonitor;
+
 /**
  * Represents a Monitor endpoint.
  */
@@ -25,6 +28,8 @@ public class MonitorEndpoint
 	private String name;
 	@UriParam(defaultValue = "10")
 	private int option = 10;
+
+	private Monitor monitor = new ConsoleMonitor(); // TODO read from registry
 
 	public MonitorEndpoint()
 	{
@@ -58,6 +63,11 @@ public class MonitorEndpoint
 	public boolean isSingleton()
 	{
 		return true;
+	}
+
+	public Monitor getMonitor()
+	{
+		return this.monitor;
 	}
 
 	/**
