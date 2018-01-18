@@ -1,4 +1,4 @@
-package cj.software.camel.component.monitor;
+package cj.software.camel.monitoring;
 
 import java.util.Map;
 

@@ -1,1 +1,1 @@
-class=cj.software.camel.component.monitor.MonitorComponent
+class=cj.software.camel.monitoring.MonitorComponent

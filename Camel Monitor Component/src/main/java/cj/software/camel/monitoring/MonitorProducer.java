@@ -1,4 +1,4 @@
-package cj.software.camel.component.monitor;
+package cj.software.camel.monitoring;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
