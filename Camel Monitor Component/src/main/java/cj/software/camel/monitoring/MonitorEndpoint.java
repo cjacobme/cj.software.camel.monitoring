@@ -8,6 +8,7 @@ import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriPath;
+import org.apache.logging.log4j.Level;
 
 import cj.software.camel.monitoring.monitor.Monitor;
 
@@ -38,6 +39,12 @@ public class MonitorEndpoint
 			description = "Reference to the monitor implementation",
 			javaType = "java.lang.String")
 	private String monitorRef;
+
+	@UriPath(name = "logLevel",
+			description = "Log-Level",
+			defaultValue = "INFO",
+			javaType = "org.apache.logging.log4jLevel")
+	private Level logLevel = Level.INFO;
 
 	private Monitor monitor;
 
@@ -129,5 +136,20 @@ public class MonitorEndpoint
 	public void setMonitor(Monitor pMonitor)
 	{
 		this.monitor = pMonitor;
+	}
+
+	public Level getLogLevel()
+	{
+		return this.logLevel;
+	}
+
+	public void setLogLevel(Level pLogLevel)
+	{
+		this.logLevel = pLogLevel;
+	}
+
+	public void setLogLevel(String pLogLevel)
+	{
+		this.setLogLevel(Level.valueOf(pLogLevel));
 	}
 }

@@ -1,5 +1,6 @@
 package cj.software.camel.monitoring.monitor.log4j2;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,64 +17,70 @@ public class LoggerMonitor
 	@Override
 	public String monitor(MonitorEndpoint pEndpoint, MonitoredExchange pMonitoredEntity)
 	{
+		Level lLevel = pEndpoint.getLogLevel();
+
 		// TODO the log level must somehow be configured. Possible solutions:
 		// TODO 1. possible solution: as a parameter in the route
 		// TODO 2. possible solution: when the JNDI-Context is set up
 		String lLoggerName = pEndpoint.getLoggerName();
 		Logger lLogger = LogManager.getFormatterLogger(lLoggerName);
 
-		lLogger.info(
-				"##################                   %s                   ##################",
-				pMonitoredEntity.getExchangeId());
+		synchronized (lLogger)
+		{
+			lLogger.log(
+					lLevel,
+					"##################                   %s                   ##################",
+					pMonitoredEntity.getExchangeId());
 
-		lLogger.info("Camel Context Name  = %s", pMonitoredEntity.getCamelContextName());
-		lLogger.info("Endpoint-URI        = %s", pMonitoredEntity.getEndpointURI());
-		lLogger.info("initial Route-ID    = %s", pMonitoredEntity.getInitialRouteId());
-		lLogger.info("Current Route-ID    = %s", pMonitoredEntity.getCurrentRouteId());
-		lLogger.info("Exchange created at = %s", pMonitoredEntity.getExchangeCreated());
-		lLogger.info("Monitored at        = %s", pMonitoredEntity.getMonitored());
-		lLogger.info("");
+			lLogger.log(lLevel, "Camel Context Name  = %s", pMonitoredEntity.getCamelContextName());
+			lLogger.log(lLevel, "Endpoint-URI        = %s", pMonitoredEntity.getEndpointURI());
+			lLogger.log(lLevel, "initial Route-ID    = %s", pMonitoredEntity.getInitialRouteId());
+			lLogger.log(lLevel, "Current Route-ID    = %s", pMonitoredEntity.getCurrentRouteId());
+			lLogger.log(lLevel, "Exchange created at = %s", pMonitoredEntity.getExchangeCreated());
+			lLogger.log(lLevel, "Monitored at        = %s", pMonitoredEntity.getMonitored());
+			lLogger.log(lLevel, "");
 
-		lLogger.info("=========        IN MESSAGE        =========");
-		this.logMessage(pMonitoredEntity.getInMessage(), lLogger);
-		lLogger.info("");
+			lLogger.log(lLevel, "=========        IN MESSAGE        =========");
+			this.logMessage(pMonitoredEntity.getInMessage(), lLogger, lLevel);
+			lLogger.log(lLevel, "");
 
-		lLogger.info("=========       OUT MESSAGE        =========");
-		this.logMessage(pMonitoredEntity.getOutMessage(), lLogger);
-		lLogger.info("");
+			lLogger.log(lLevel, "=========       OUT MESSAGE        =========");
+			this.logMessage(pMonitoredEntity.getOutMessage(), lLogger, lLevel);
+			lLogger.log(lLevel, "");
+		}
 
 		return "log4j2 (" + lLoggerName + ")";
 	}
 
-	private void logMessage(MonitoredMessage pMessage, Logger pLogger)
+	private void logMessage(MonitoredMessage pMessage, Logger pLogger, Level pLevel)
 	{
 		if (pMessage != null)
 		{
-			pLogger.info("   Message-Id            = %s", pMessage.getMessageId());
+			pLogger.log(pLevel, "   Message-Id            = %s", pMessage.getMessageId());
 
 			Class<?> lBodyClass = pMessage.getBodyClass();
 			if (lBodyClass != null)
 			{
-				pLogger.info("   Body's class name     = %s", lBodyClass.getName());
+				pLogger.log(pLevel, "   Body's class name     = %s", lBodyClass.getName());
 			}
 			else
 			{
-				pLogger.info("   Body's class name does not exist");
+				pLogger.log(pLevel, "   Body's class name does not exist");
 			}
 
 			Object lBody = pMessage.getBody();
 			if (lBody != null)
 			{
-				pLogger.info("   Body                  = %s", lBody.toString());
+				pLogger.log(pLevel, "   Body                  = %s", lBody.toString());
 			}
 			else
 			{
-				pLogger.info("   Body does not exist");
+				pLogger.log(pLevel, "   Body does not exist");
 			}
 		}
 		else
 		{
-			pLogger.info("   this message does not exist");
+			pLogger.log(pLevel, "   this message does not exist");
 		}
 	}
 }

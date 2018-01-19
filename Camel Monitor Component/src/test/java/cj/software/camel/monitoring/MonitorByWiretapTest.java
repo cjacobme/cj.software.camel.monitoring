@@ -32,7 +32,7 @@ public class MonitorByWiretapTest
 			{
 				from("direct:start")
 						.routeId("wiretap-start")
-						.wireTap("moni://bar?option=4711")
+						.wireTap("moni://bar?option=4711&logLevel=WARN")
 						.log("${body}")
 						.to("direct:step2");
 				from("direct:step2")

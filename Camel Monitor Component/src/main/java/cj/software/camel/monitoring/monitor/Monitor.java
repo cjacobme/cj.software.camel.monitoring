@@ -13,9 +13,9 @@ public interface Monitor
 	 * 
 	 * @param pEndpoint
 	 *            the endpoint which holds configuration entries
-	 * @param pMonitoredEntity
+	 * @param pMonitoredExchange
 	 *            the Exchange to be monitored
 	 * @return a unique id for the monitored exchange if the implementation has stored it somehow.
 	 */
-	public String monitor(MonitorEndpoint pEndpoint, MonitoredExchange pMonitoredEntity);
+	public String monitor(MonitorEndpoint pEndpoint, MonitoredExchange pMonitoredExchange);
 }
