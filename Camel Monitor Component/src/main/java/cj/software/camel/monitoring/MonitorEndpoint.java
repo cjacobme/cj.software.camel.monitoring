@@ -10,7 +10,6 @@ import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriPath;
 
 import cj.software.camel.monitoring.monitor.Monitor;
-import cj.software.camel.monitoring.monitor.log4j2.LoggerMonitor;
 
 /**
  * Represents a Monitor endpoint.
@@ -35,8 +34,12 @@ public class MonitorEndpoint
 			javaType = "java.lang.String")
 	private String loggerName = "LoggerMonitor";
 
-	// private Monitor monitor = new ConsoleMonitor(); // TODO read from registry
-	private Monitor monitor = new LoggerMonitor(); // TODO read from registry
+	@UriPath(name = "monitorRef",
+			description = "Reference to the monitor implementation",
+			javaType = "java.lang.String")
+	private String monitorRef;
+
+	private Monitor monitor;
 
 	public MonitorEndpoint()
 	{
@@ -111,5 +114,20 @@ public class MonitorEndpoint
 	public void setLoggerName(String pLoggerName)
 	{
 		this.loggerName = pLoggerName;
+	}
+
+	public String getMonitorRef()
+	{
+		return this.monitorRef;
+	}
+
+	public void setMonitorRef(String pMonitorRef)
+	{
+		this.monitorRef = pMonitorRef;
+	}
+
+	public void setMonitor(Monitor pMonitor)
+	{
+		this.monitor = pMonitor;
 	}
 }
