@@ -4,11 +4,10 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
 public class MonitorTimerTest
-		extends CamelTestSupport
+		extends MonitorTest
 {
 	@EndpointInject(uri = "mock:timer-started")
 	private MockEndpoint timerStarted;

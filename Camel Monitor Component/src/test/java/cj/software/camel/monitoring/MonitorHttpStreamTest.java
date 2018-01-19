@@ -7,8 +7,12 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
+
+import cj.software.camel.monitoring.monitor.console.ConsoleMonitor;
+import cj.software.camel.monitoring.monitor.log4j2.LoggerMonitor;
 
 public class MonitorHttpStreamTest
 		extends CamelTestSupport
@@ -18,6 +22,15 @@ public class MonitorHttpStreamTest
 
 	@Produce(uri = "direct:start")
 	private ProducerTemplate downloader;
+
+	@Override
+	protected JndiRegistry createRegistry() throws Exception
+	{
+		JndiRegistry lResult = super.createRegistry();
+		lResult.bind("LoggerMonitor", new LoggerMonitor());
+		lResult.bind("ConsoleMonitor", new ConsoleMonitor());
+		return lResult;
+	}
 
 	@Override
 	public RouteBuilder createRouteBuilder()
@@ -33,7 +46,7 @@ public class MonitorHttpStreamTest
 					.setBody(simple("{null}"))
 					.setHeader(Exchange.HTTP_METHOD, constant("GET"))
 					.to("https://www.nasa.gov")
-					.wireTap("moni:?loggerName=nasa")
+					.wireTap("moni:?loggerName=nasa&monitorRef=LoggerMonitor")
 					.log("before sleep")
 					.process(new Processor()
 					{
@@ -45,6 +58,7 @@ public class MonitorHttpStreamTest
 						}
 					})
 					.log("after sleep")
+					.convertBodyTo(String.class)
 					.log("${body}")
 					.to("mock:downloaded")
 				;
@@ -54,10 +68,11 @@ public class MonitorHttpStreamTest
 	}
 
 	@Test
-	public void downloadStream()
+	public void downloadStream() throws InterruptedException
 	{
 		this.mockEndpoint.expectedMessageCount(1);
 		this.downloader.sendBody("los gezz");
+		// Thread.sleep(3600000);
 	}
 
 }
