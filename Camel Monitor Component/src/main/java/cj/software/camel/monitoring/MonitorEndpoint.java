@@ -9,8 +9,8 @@ import org.apache.camel.spi.UriEndpoint;
 import org.apache.camel.spi.UriParam;
 import org.apache.camel.spi.UriPath;
 
-import cj.software.camel.monitoring.log4j2.LoggerMonitor;
 import cj.software.camel.monitoring.monitor.Monitor;
+import cj.software.camel.monitoring.monitor.log4j2.LoggerMonitor;
 
 /**
  * Represents a Monitor endpoint.

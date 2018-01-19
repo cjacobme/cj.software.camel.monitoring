@@ -12,6 +12,8 @@ public class MonitoredExchange
 {
 	private static final long serialVersionUID = 1L;
 
+	private String exchangeId;
+
 	private String camelContextName;
 
 	private String endpointURI;
@@ -24,11 +26,19 @@ public class MonitoredExchange
 
 	private OffsetDateTime monitored;
 
+	private MonitoredMessage inMessage;
+
+	private MonitoredMessage outMessage;
+
 	// TODO: Properties etc
-	// TODO: in and out message
 
 	private MonitoredExchange()
 	{
+	}
+
+	public String getExchangeId()
+	{
+		return this.exchangeId;
 	}
 
 	public String getCamelContextName()
@@ -66,6 +76,16 @@ public class MonitoredExchange
 		return new Builder();
 	}
 
+	public MonitoredMessage getInMessage()
+	{
+		return this.inMessage;
+	}
+
+	public MonitoredMessage getOutMessage()
+	{
+		return this.outMessage;
+	}
+
 	public static class Builder
 	{
 		protected MonitoredExchange instance;
@@ -73,6 +93,12 @@ public class MonitoredExchange
 		protected Builder()
 		{
 			this.instance = new MonitoredExchange();
+		}
+
+		public Builder withExchangeId(String pExchangeId)
+		{
+			this.instance.exchangeId = pExchangeId;
+			return this;
 		}
 
 		public Builder withCamelContextName(String pCamelContextName)
@@ -108,6 +134,18 @@ public class MonitoredExchange
 		public Builder withMonitored(OffsetDateTime pMonitored)
 		{
 			this.instance.monitored = pMonitored;
+			return this;
+		}
+
+		public Builder withInMessage(MonitoredMessage pInMessage)
+		{
+			this.instance.inMessage = pInMessage;
+			return this;
+		}
+
+		public Builder withOutMessage(MonitoredMessage pOutMessage)
+		{
+			this.instance.outMessage = pOutMessage;
 			return this;
 		}
 
