@@ -19,9 +19,6 @@ public class LoggerMonitor
 	{
 		Level lLevel = pEndpoint.getLogLevel();
 
-		// TODO the log level must somehow be configured. Possible solutions:
-		// TODO 1. possible solution: as a parameter in the route
-		// TODO 2. possible solution: when the JNDI-Context is set up
 		String lLoggerName = pEndpoint.getLoggerName();
 		Logger lLogger = LogManager.getFormatterLogger(lLoggerName);
 
