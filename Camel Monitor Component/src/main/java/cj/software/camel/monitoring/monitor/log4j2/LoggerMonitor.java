@@ -64,7 +64,6 @@ public class LoggerMonitor
 			Object lBody = pMessage.getBody();
 			if (lBody != null)
 			{
-				// TODO if it is some sort of stream, dont't do the following code line!
 				pLogger.info("   Body                  = %s", lBody.toString());
 			}
 			else

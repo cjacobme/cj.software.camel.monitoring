@@ -1,5 +1,7 @@
 package cj.software.camel.monitoring.data;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 public class MonitoredMessage
@@ -55,14 +57,22 @@ public class MonitoredMessage
 
 		public Builder withBody(Object pBody)
 		{
-			this.instance.body = pBody;
 			if (pBody != null)
 			{
 				this.instance.bodyClass = pBody.getClass();
+				if (pBody instanceof OutputStream || pBody instanceof InputStream)
+				{
+					this.instance.body = pBody.getClass().getName() + " will not be converted";
+				}
+				else
+				{
+					this.instance.body = pBody;
+				}
 			}
 			else
 			{
-				this.instance.body = null;
+				this.instance.body = pBody;
+				this.instance.bodyClass = null;
 			}
 			return this;
 		}
