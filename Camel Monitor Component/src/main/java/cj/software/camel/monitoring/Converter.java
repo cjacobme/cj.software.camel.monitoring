@@ -19,12 +19,21 @@ class Converter
 	{
 		UnitOfWork lUnitOfWork = pExchange.getUnitOfWork();
 
-		MonitoredMessage lInMessage = toMonitoredMessage(pExchange.getIn());
-		MonitoredMessage lOutMessage = toMonitoredMessage(pExchange.getOut());
+		Message lIn = pExchange.getIn();
+		Message lOut = pExchange.getOut();
+
+		String lExchangeId = pExchange.getProperty(Exchange.CORRELATION_ID, String.class);
+		if (lExchangeId == null)
+		{
+			lExchangeId = pExchange.getExchangeId();
+		}
+
+		MonitoredMessage lInMessage = toMonitoredMessage(lIn);
+		MonitoredMessage lOutMessage = toMonitoredMessage(lOut);
 
 		MonitoredExchange lResult = MonitoredExchange
 				.builder()
-				.withExchangeId(pExchange.getExchangeId())
+				.withExchangeId(lExchangeId)
 				.withCamelContextName(pExchange.getContext().getName())
 				.withEndpointURI(lUnitOfWork.getRouteContext().getEndpoint().getEndpointKey())
 				.withInitialRouteId(pExchange.getFromRouteId())

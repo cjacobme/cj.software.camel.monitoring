@@ -24,7 +24,7 @@ public class MonitorTimerTest
 				//@formatter:off
 				from ("timer:moni-test?delay=1000&repeatCount=15&period=1000")
 					.routeId("my-timer")
-					.log("next cycle started ${header.CamelTimerCounter}")
+					.log("next cycle started ${header.CamelTimerCounter} in exchange ${exchangeId}")
 					.setBody(header(Exchange.TIMER_COUNTER))
 					.wireTap("moni://?loggerName=my-timer-log")
 					.to("mock:timer-started")
@@ -39,6 +39,6 @@ public class MonitorTimerTest
 	public void timedRoute() throws InterruptedException
 	{
 		this.timerStarted.expectedMessageCount(5);
-		this.timerStarted.assertIsSatisfied(60000);
+		this.timerStarted.assertIsSatisfied(180000);
 	}
 }
