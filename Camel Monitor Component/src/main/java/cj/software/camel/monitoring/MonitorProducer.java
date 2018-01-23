@@ -24,5 +24,6 @@ public class MonitorProducer
 	{
 		MonitoredExchange lMonitoredExchange = Converter.toMonitoredExchange(pExchange);
 		this.endpoint.getMonitor().monitor(this.endpoint, lMonitoredExchange);
+		pExchange.setOut(pExchange.getIn());
 	}
 }

@@ -6,7 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Test;
 
-public class MonitorTimerTest
+public class MonitorTimerDirectTest
 		extends MonitorTest
 {
 	@EndpointInject(uri = "mock:timer-started")
@@ -26,7 +26,8 @@ public class MonitorTimerTest
 					.routeId("my-timer")
 					.log("next cycle started ${header.CamelTimerCounter} in exchange ${exchangeId}")
 					.setBody(header(Exchange.TIMER_COUNTER))
-					.wireTap("moni://?loggerName=my-timer-log")
+					.to("moni://?loggerName=my-timer-log")
+					.log("counter=${body}")
 					.to("mock:timer-started")
 				;
 				//@formatter:on
