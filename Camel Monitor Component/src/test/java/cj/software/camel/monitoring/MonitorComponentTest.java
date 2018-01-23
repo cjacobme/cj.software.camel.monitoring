@@ -28,14 +28,14 @@ public class MonitorComponentTest
 			{
 				from("direct:start")
 						.routeId("try")
-						.to("moni://bar?option=4711&loggerName=start")
+						.to("moni://bar?loggerName=start")
 						.log("${body}")
 						.to("mock:result")
 						.to("direct:step2");
 				from("direct:step2")
 						.routeId("step #2")
 						.log("${body}")
-						.to("moni://?name=MyNameIsNobody")
+						.to("moni://bar")
 						.setBody(constant("hello world"))
 						.log("${body}")
 						.to("moni://xyz");

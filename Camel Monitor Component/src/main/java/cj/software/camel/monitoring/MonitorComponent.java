@@ -28,7 +28,29 @@ public class MonitorComponent
 		MonitorEndpoint lEndpoint = new MonitorEndpoint(pURI, this);
 		setProperties(lEndpoint, pParameters);
 		lEndpoint.setMonitor(lMonitor);
+
+		switch (pRemaining)
+		{
+		case "start":
+			this.startMonitoring(lEndpoint);
+			break;
+		}
+
 		return lEndpoint;
+	}
+
+	private void startMonitoring(MonitorEndpoint pEndpoint)
+	{
+		String lRunningContext = pEndpoint.getRunningContext();
+		if (lRunningContext == null)
+		{
+			throw new IllegalArgumentException("running context required for moni://start");
+		}
+		lRunningContext = lRunningContext.trim();
+		if (lRunningContext.isEmpty())
+		{
+			throw new IllegalArgumentException("empty running context string");
+		}
 	}
 
 	private Monitor lookupMonitor(CamelContext pCtx, Map<String, Object> pParameters)
