@@ -23,24 +23,31 @@ public class MonitorComponent
 			String pRemaining,
 			Map<String, Object> pParameters) throws Exception
 	{
-		CamelContext lCtx = getCamelContext();
-		Monitor lMonitor = this.lookupMonitor(lCtx, pParameters);
 		MonitorEndpoint lEndpoint = new MonitorEndpoint(pURI, this);
 		setProperties(lEndpoint, pParameters);
-		lEndpoint.setMonitor(lMonitor);
+
+		CamelContext lCtx = getCamelContext();
 
 		switch (pRemaining)
 		{
 		case "start":
-			this.startMonitoring(lEndpoint);
+			this.startMonitoring(lCtx, pParameters, lEndpoint);
 			break;
+		default:
+			throw new IllegalArgumentException("unknown remaining URI part: " + pRemaining);
 		}
 
 		return lEndpoint;
 	}
 
-	private void startMonitoring(MonitorEndpoint pEndpoint)
+	private void startMonitoring(
+			CamelContext pCtx,
+			Map<String, Object> pParameters,
+			MonitorEndpoint pEndpoint)
 	{
+		Monitor lMonitor = this.lookupMonitor(pCtx, pEndpoint);
+		pEndpoint.setMonitor(lMonitor);
+
 		String lRunningContext = pEndpoint.getRunningContext();
 		if (lRunningContext == null)
 		{
@@ -53,29 +60,17 @@ public class MonitorComponent
 		}
 	}
 
-	private Monitor lookupMonitor(CamelContext pCtx, Map<String, Object> pParameters)
+	private Monitor lookupMonitor(CamelContext pCtx, MonitorEndpoint pEndpoint)
 	{
-		/*
-		 * try to get the Monitor directly
-		 */
-		Monitor lResult = super.resolveAndRemoveReferenceParameter(
-				pParameters,
-				"monitor",
-				Monitor.class);
+		Monitor lResult = null;
 
 		/*
 		 * try to lookup by its reference
 		 */
-		if (lResult == null)
+		String lMonitorRef = pEndpoint.getMonitorRef();
+		if (lMonitorRef != null)
 		{
-			String lMonitorRef = super.getAndRemoveParameter(
-					pParameters,
-					"monitorRef",
-					String.class);
-			if (lMonitorRef != null)
-			{
-				lResult = CamelContextHelper.mandatoryLookup(pCtx, lMonitorRef, Monitor.class);
-			}
+			lResult = CamelContextHelper.mandatoryLookup(pCtx, lMonitorRef, Monitor.class);
 		}
 
 		/*

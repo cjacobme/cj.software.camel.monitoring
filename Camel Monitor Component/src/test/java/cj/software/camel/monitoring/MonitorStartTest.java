@@ -34,10 +34,10 @@ public class MonitorStartTest
 		Properties properties = new Properties();
 
 		// jndi.properties is optional
-		InputStream in = getClass().getClassLoader().getResourceAsStream("jndi.properties");
-		if (in != null)
+		InputStream lIS = getClass().getClassLoader().getResourceAsStream("jndi.properties");
+		if (lIS != null)
 		{
-			properties.load(in);
+			properties.load(lIS);
 		}
 		else
 		{
@@ -162,5 +162,100 @@ public class MonitorStartTest
 			assertThat(lMessage).as("Message in Exception").isEqualTo(
 					"empty running context string");
 		}
+	}
+
+	@Test
+	public void lookupMonitorByReference() throws Exception
+	{
+		JndiRegistry lRegistry = this.createRegistry();
+		lRegistry.bind("LoggerMonitor2", new LoggerMonitor());
+		CamelContext lCtx = new DefaultCamelContext(lRegistry);
+		lCtx.addRoutes(new RouteBuilder()
+		{
+
+			@Override
+			public void configure() throws Exception
+			{
+				//@formatter:off
+				from ("direct:start")
+					.routeId("test-2-monitors")
+					.to("moni://start?runningContext=CheckStartMethod&monitorRef=LoggerMonitor2")
+				;
+				//@formatter:on
+			}
+		});
+		lCtx.start();
+		lCtx.stop();
+	}
+
+	@Test
+	public void multipleMonitorsInRegistryFail() throws Exception
+	{
+		JndiRegistry lRegistry = this.createRegistry();
+		lRegistry.bind("LoggerMonitor2", new LoggerMonitor());
+		CamelContext lCtx = new DefaultCamelContext(lRegistry);
+		lCtx.addRoutes(new RouteBuilder()
+		{
+
+			@Override
+			public void configure() throws Exception
+			{
+				//@formatter:off
+				from ("direct:start")
+					.routeId("test-2-monitors")
+					.to("moni://start?runningContext=CheckStartMethod")
+				;
+				//@formatter:on
+			}
+		});
+		try
+		{
+			lCtx.start();
+			Assert.fail("expected exception not thrown");
+		}
+		catch (FailedToCreateRouteException pFCRE)
+		{
+			ResolveEndpointFailedException lCause1 = (ResolveEndpointFailedException) pFCRE
+					.getCause();
+			IllegalArgumentException lCause2 = (IllegalArgumentException) lCause1.getCause();
+			String lMessage = lCause2.getMessage();
+			assertThat(lMessage).as("exception message").isEqualTo(
+					"2 Monitors were found in the registry and no explicit configuration provided");
+		}
+		lCtx.stop();
+	}
+
+	@Test
+	public void noMonitorsInRegistryFail() throws Exception
+	{
+		CamelContext lCtx = new DefaultCamelContext();
+		lCtx.addRoutes(new RouteBuilder()
+		{
+
+			@Override
+			public void configure() throws Exception
+			{
+				//@formatter:off
+				from ("direct:start")
+					.routeId("test-2-monitors")
+					.to("moni://start?runningContext=CheckStartMethod")
+				;
+				//@formatter:on
+			}
+		});
+		try
+		{
+			lCtx.start();
+			Assert.fail("expected exception not thrown");
+		}
+		catch (FailedToCreateRouteException pFCRE)
+		{
+			ResolveEndpointFailedException lCause1 = (ResolveEndpointFailedException) pFCRE
+					.getCause();
+			IllegalArgumentException lCause2 = (IllegalArgumentException) lCause1.getCause();
+			String lMessage = lCause2.getMessage();
+			assertThat(lMessage).as("exception message").isEqualTo("monitor must be configured");
+		}
+		lCtx.stop();
 	}
 }

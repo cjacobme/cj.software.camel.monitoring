@@ -2,8 +2,10 @@ package cj.software.camel.monitoring;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MonitorComponentTest
 		extends MonitorTest
 {
