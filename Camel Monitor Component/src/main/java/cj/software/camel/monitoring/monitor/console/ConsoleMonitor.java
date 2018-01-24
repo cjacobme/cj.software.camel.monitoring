@@ -1,5 +1,7 @@
 package cj.software.camel.monitoring.monitor.console;
 
+import java.util.UUID;
+
 import cj.software.camel.monitoring.MonitorEndpoint;
 import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.monitor.Monitor;
@@ -30,5 +32,12 @@ public class ConsoleMonitor
 	private void print(String pResource, Object pEntry)
 	{
 		System.out.println(String.format("%-20s = %s", pResource, pEntry));
+	}
+
+	@Override
+	public String startNewRunningContext(String pRunningContext)
+	{
+		String lResult = UUID.randomUUID().toString();
+		return lResult;
 	}
 }

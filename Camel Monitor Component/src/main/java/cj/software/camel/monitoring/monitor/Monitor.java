@@ -9,6 +9,15 @@ import cj.software.camel.monitoring.data.MonitoredExchange;
 public interface Monitor
 {
 	/**
+	 * starts the monitoring of a new run for a new running context.
+	 * 
+	 * @param pRunningContext
+	 *            the running context in question
+	 * @return a unique id for the new run.
+	 */
+	public String startNewRunningContext(String pRunningContext);
+
+	/**
 	 * monitors a monitored Exchange
 	 * 
 	 * @param pEndpoint

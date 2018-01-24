@@ -16,6 +16,7 @@ import cj.software.camel.monitoring.monitor.Monitor;
 public class MonitorComponent
 		extends DefaultComponent
 {
+	public static final String MONITOR_RUN_ID = "CamelMonitorRunId";
 
 	@Override
 	protected Endpoint createEndpoint(

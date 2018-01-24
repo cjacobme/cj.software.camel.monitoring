@@ -1,5 +1,7 @@
 package cj.software.camel.monitoring.monitor.log4j2;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,5 +81,12 @@ public class LoggerMonitor
 		{
 			pLogger.log(pLevel, "   this message does not exist");
 		}
+	}
+
+	@Override
+	public String startNewRunningContext(String pRunningContext)
+	{
+		String lResult = UUID.randomUUID().toString();
+		return lResult;
 	}
 }
