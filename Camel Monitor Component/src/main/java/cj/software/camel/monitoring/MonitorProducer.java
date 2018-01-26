@@ -3,6 +3,7 @@ package cj.software.camel.monitoring;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
 
+import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.monitor.Monitor;
 
 /**
@@ -23,7 +24,15 @@ public class MonitorProducer
 	{
 		String lEndpointUri = this.endpoint.getEndpointUri();
 		int lIndex = lEndpointUri.indexOf("?");
-		String lResult = lEndpointUri.substring(0, lIndex);
+		String lResult;
+		if (lIndex >= 0)
+		{
+			lResult = lEndpointUri.substring(0, lIndex);
+		}
+		else
+		{
+			lResult = lEndpointUri;
+		}
 		lResult = lResult.substring("moni://".length());
 		return lResult;
 	}
@@ -37,6 +46,9 @@ public class MonitorProducer
 		case "start":
 			this.start(pExchange);
 			break;
+		case "entry":
+			this.entry(pExchange);
+			break;
 		default:
 			throw new UnsupportedOperationException("unknown URI-Part:" + lInitialUriPart);
 		}
@@ -47,8 +59,17 @@ public class MonitorProducer
 	private void start(Exchange pExchange)
 	{
 		Monitor lMonitor = this.endpoint.getMonitor();
+		pExchange.setProperty(MonitorComponent.MONITOR, lMonitor);
 		String lRunningContext = this.endpoint.getRunningContext();
+		pExchange.setProperty(MonitorComponent.RUNNING_CONTEXT, lRunningContext);
 		String lRunId = lMonitor.startNewRunningContext(lRunningContext);
 		pExchange.setProperty(MonitorComponent.MONITOR_RUN_ID, lRunId);
+	}
+
+	private void entry(Exchange pExchange)
+	{
+		MonitoredExchange lMonitoredExchange = Converter.toMonitoredExchange(pExchange);
+		Monitor lMonitor = (Monitor) pExchange.getProperty(MonitorComponent.MONITOR);
+		lMonitor.monitor(this.endpoint, lMonitoredExchange);
 	}
 }

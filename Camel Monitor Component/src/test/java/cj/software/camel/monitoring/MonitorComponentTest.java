@@ -5,6 +5,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cj.software.camel.monitoring.monitor.Monitor;
+import cj.software.camel.monitoring.monitor.log4j2.LoggerMonitor;
+
 @Ignore
 public class MonitorComponentTest
 		extends MonitorTest
@@ -43,5 +46,11 @@ public class MonitorComponentTest
 						.to("moni://xyz");
 			}
 		};
+	}
+
+	@Override
+	protected Monitor getMonitor()
+	{
+		return new LoggerMonitor();
 	}
 }

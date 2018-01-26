@@ -18,6 +18,10 @@ public class MonitorComponent
 {
 	public static final String MONITOR_RUN_ID = "CamelMonitorRunId";
 
+	public static final String MONITOR = "CamelMonitor";
+
+	public static final String RUNNING_CONTEXT = "CamelMonitorRunningContext";
+
 	@Override
 	protected Endpoint createEndpoint(
 			String pURI,
@@ -33,6 +37,8 @@ public class MonitorComponent
 		{
 		case "start":
 			this.startMonitoring(lCtx, pParameters, lEndpoint);
+			break;
+		case "entry":
 			break;
 		default:
 			throw new IllegalArgumentException("unknown remaining URI part: " + pRemaining);
