@@ -37,6 +37,7 @@ class Converter
 				.builder()
 				.withRunId(lRunId)
 				.withExchangeId(lExchangeId)
+				.withProperties(pExchange.getProperties())
 				.withCamelContextName(pExchange.getContext().getName())
 				.withEndpointURI(lUnitOfWork.getRouteContext().getEndpoint().getEndpointKey())
 				.withInitialRouteId(pExchange.getFromRouteId())

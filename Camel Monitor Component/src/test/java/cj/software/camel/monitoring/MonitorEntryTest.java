@@ -1,6 +1,10 @@
 package cj.software.camel.monitoring;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -89,10 +93,48 @@ public class MonitorEntryTest
 		Assertions.assertThat(lMonitored.getRunId()).as("run-id").isEqualTo(
 				"Mock-Monitor #0 - normal entry");
 
+		Map<String, Object> lProperties = lMonitored.getProperties();
+		this.assertExchangeProperties(lProperties);
+
 		MonitoredMessage lInMessage = lMonitored.getInMessage();
 		this.assertInMessage(lInMessage);
 		MonitoredMessage lOutMessage = lMonitored.getOutMessage();
 		this.assertOutMessage(lOutMessage);
+	}
+
+	private void assertExchangeProperties(Map<String, Object> pProperties)
+	{
+		Assertions.assertThat(pProperties).as("properties").isNotNull().isNotEmpty();
+		Set<String> lKeys = pProperties.keySet();
+		Assertions.assertThat(lKeys).as("Keys").containsExactlyInAnyOrder(
+				"CamelCreatedTimestamp",
+				"CamelExternalRedelivered",
+				"CamelMessageHistory",
+				"CamelMonitor",
+				"CamelMonitorRunId",
+				"CamelMonitorRunningContext",
+				"CamelToEndpoint");
+		Assertions
+				.assertThat(pProperties.get("CamelCreatedTimestamp"))
+				.as("created timestamp")
+				.isInstanceOf(Date.class);
+		Assertions
+				.assertThat(pProperties.get("CamelExternalRedelivered"))
+				.as("externally redelivered")
+				.isEqualTo(Boolean.FALSE);
+		Assertions
+				.assertThat(pProperties.get("CamelMessageHistory"))
+				.as("Message history")
+				.isInstanceOf(LinkedList.class);
+		Assertions.assertThat(pProperties.get("CamelMonitor")).isInstanceOf(Monitor.class);
+		Assertions.assertThat(pProperties.get("CamelMonitorRunId")).as("Run-ID").isEqualTo(
+				"Mock-Monitor #0 - normal entry");
+		Assertions
+				.assertThat(pProperties.get("CamelMonitorRunningContext"))
+				.as("Running Context")
+				.isEqualTo("normal entry");
+		Assertions.assertThat(pProperties.get("CamelToEndpoint")).as("to-endpoint").isEqualTo(
+				"moni://entry");
 	}
 
 	private void assertInMessage(MonitoredMessage pMessage)

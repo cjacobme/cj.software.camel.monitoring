@@ -2,6 +2,9 @@ package cj.software.camel.monitoring.data;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Entity that contains all informations to be monitored
@@ -33,6 +36,8 @@ public class MonitoredExchange
 	private MonitoredMessage inMessage;
 
 	private MonitoredMessage outMessage;
+
+	private Map<String, Object> properties = new HashMap<>();
 
 	// TODO: Properties etc
 
@@ -98,6 +103,11 @@ public class MonitoredExchange
 	public MonitoredMessage getOutMessage()
 	{
 		return this.outMessage;
+	}
+
+	public Map<String, Object> getProperties()
+	{
+		return Collections.unmodifiableMap(this.properties);
 	}
 
 	public static class Builder
@@ -172,6 +182,24 @@ public class MonitoredExchange
 		public Builder withRunningContext(String pRunningContext)
 		{
 			this.instance.runningContext = pRunningContext;
+			return this;
+		}
+
+		public Builder withProperties(Map<String, Object> pProperties)
+		{
+			this.instance.properties.clear();
+			return this.addProperties(pProperties);
+		}
+
+		public Builder addProperties(Map<String, Object> pProperties)
+		{
+			this.instance.properties.putAll(pProperties);
+			return this;
+		}
+
+		public Builder addProperty(String pKey, Object pValue)
+		{
+			this.instance.properties.put(pKey, pValue);
 			return this;
 		}
 
