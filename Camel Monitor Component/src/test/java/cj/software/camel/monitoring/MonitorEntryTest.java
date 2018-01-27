@@ -139,17 +139,29 @@ public class MonitorEntryTest
 
 	private void assertInMessage(MonitoredMessage pMessage)
 	{
-		Assertions.assertThat(pMessage).as("in message").isNotNull();
+		Assertions.assertThat(pMessage).as("IN message").isNotNull();
 		Assertions.assertThat(pMessage.getMessageId()).as("message id").isNotEmpty();
 		Assertions.assertThat(pMessage.getBodyClass()).as("body class").isEqualTo(String.class);
 		Assertions.assertThat(pMessage.getBody()).as("body").isEqualTo("start now!");
+
+		Map<String, Object> lHeaders = pMessage.getHeaders();
+		Assertions.assertThat(lHeaders).as("IN headers").isNotNull();
+		Set<String> lKeys = lHeaders.keySet();
+		Assertions.assertThat(lKeys).as("IN header keys").containsExactlyInAnyOrder("breadcrumbId");
+		String lBreadCrumbId = (String) lHeaders.get("breadcrumbId");
+		Assertions.assertThat(lBreadCrumbId).as("breadcrumbid").isNotEmpty();
 	}
 
 	private void assertOutMessage(MonitoredMessage pMessage)
 	{
-		Assertions.assertThat(pMessage).as("out message").isNotNull();
+		Assertions.assertThat(pMessage).as("OUT message").isNotNull();
 		Assertions.assertThat(pMessage.getMessageId()).as("message id").isNotEmpty();
 		Assertions.assertThat(pMessage.getBodyClass()).as("body class").isNull();
 		Assertions.assertThat(pMessage.getBody()).as("body").isNull();
+		Map<String, Object> lHeaders = pMessage.getHeaders();
+
+		Assertions.assertThat(lHeaders).as("OUT headers").isNotNull();
+		Set<String> lKeys = lHeaders.keySet();
+		Assertions.assertThat(lKeys).as("OUT header keys").isEmpty();
 	}
 }

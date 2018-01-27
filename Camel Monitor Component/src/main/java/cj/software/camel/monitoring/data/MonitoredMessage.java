@@ -3,6 +3,9 @@ package cj.software.camel.monitoring.data;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MonitoredMessage
 		implements
@@ -15,6 +18,8 @@ public class MonitoredMessage
 	private Class<?> bodyClass;
 
 	private Object body;
+
+	private Map<String, Object> headers = new HashMap<>();
 
 	private MonitoredMessage()
 	{
@@ -35,6 +40,11 @@ public class MonitoredMessage
 		return this.body;
 	}
 
+	public Map<String, Object> getHeaders()
+	{
+		return Collections.unmodifiableMap(this.headers);
+	}
+
 	public static Builder builder()
 	{
 		return new Builder();
@@ -52,6 +62,24 @@ public class MonitoredMessage
 		public Builder withMessageId(String pMessageId)
 		{
 			this.instance.messageId = pMessageId;
+			return this;
+		}
+
+		public Builder withHeaders(Map<String, Object> pHeaders)
+		{
+			this.instance.headers.clear();
+			return this.addHeaders(pHeaders);
+		}
+
+		public Builder addHeaders(Map<String, Object> pHeaders)
+		{
+			this.instance.headers.putAll(pHeaders);
+			return this;
+		}
+
+		public Builder addHeader(String pKey, Object pValue)
+		{
+			this.instance.headers.put(pKey, pValue);
 			return this;
 		}
 

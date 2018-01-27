@@ -60,6 +60,7 @@ class Converter
 					.builder()
 					.withMessageId(pMessage.getMessageId())
 					.withBody(pMessage.getBody())
+					.withHeaders(pMessage.getHeaders())
 					.build();
 		}
 		else
