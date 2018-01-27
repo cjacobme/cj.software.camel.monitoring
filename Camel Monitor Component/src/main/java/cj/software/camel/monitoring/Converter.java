@@ -28,12 +28,14 @@ class Converter
 			lExchangeId = pExchange.getExchangeId();
 		}
 		String lRunningContext = (String) pExchange.getProperty(MonitorComponent.RUNNING_CONTEXT);
+		String lRunId = (String) pExchange.getProperty(MonitorComponent.MONITOR_RUN_ID);
 
 		MonitoredMessage lInMessage = toMonitoredMessage(lIn);
 		MonitoredMessage lOutMessage = toMonitoredMessage(lOut);
 
 		MonitoredExchange lResult = MonitoredExchange
 				.builder()
+				.withRunId(lRunId)
 				.withExchangeId(lExchangeId)
 				.withCamelContextName(pExchange.getContext().getName())
 				.withEndpointURI(lUnitOfWork.getRouteContext().getEndpoint().getEndpointKey())

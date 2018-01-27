@@ -12,6 +12,8 @@ public class MonitoredExchange
 {
 	private static final long serialVersionUID = 1L;
 
+	private String runId;
+
 	private String exchangeId;
 
 	private String camelContextName;
@@ -36,6 +38,11 @@ public class MonitoredExchange
 
 	private MonitoredExchange()
 	{
+	}
+
+	public String getRunId()
+	{
+		return this.runId;
 	}
 
 	public String getExchangeId()
@@ -100,6 +107,12 @@ public class MonitoredExchange
 		protected Builder()
 		{
 			this.instance = new MonitoredExchange();
+		}
+
+		public Builder withRunId(String pRunId)
+		{
+			this.instance.runId = pRunId;
+			return this;
 		}
 
 		public Builder withExchangeId(String pExchangeId)

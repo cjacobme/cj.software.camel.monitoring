@@ -3,6 +3,7 @@ package cj.software.camel.monitoring;
 import java.util.List;
 
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -11,6 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import cj.software.camel.monitoring.data.MonitoredExchange;
+import cj.software.camel.monitoring.data.MonitoredMessage;
 import cj.software.camel.monitoring.monitor.Monitor;
 
 public class MonitorEntryTest
@@ -61,21 +63,51 @@ public class MonitorEntryTest
 		this.producerTemplate.sendBody("start now!");
 		this.mockEndpoint.assertIsSatisfied();
 
+		List<Exchange> lExchanges = this.mockEndpoint.getExchanges();
+		Assertions.assertThat(lExchanges).as("list of Exchanges").hasSize(1);
+		Exchange lExchange = lExchanges.get(0);
+		String lExchangeId = lExchange.getExchangeId();
+		String lCamelContextName = lExchange.getContext().getName();
+
 		List<MonitoredExchange> lMonitoredExchanges = this.mockMonitor.getMonitoredExchanges();
 		Assertions.assertThat(lMonitoredExchanges).as("list of monitored exchanges").hasSize(1);
 		MonitoredExchange lMonitored = lMonitoredExchanges.get(0);
 
-		Assertions.assertThat(lMonitored.getCamelContextName()).as("camel context name").matches(
-				"camel.*");
+		Assertions.assertThat(lMonitored.getCamelContextName()).as("camel context name").isEqualTo(
+				lCamelContextName);
 		Assertions.assertThat(lMonitored.getCurrentRouteId()).as("current route-id").isEqualTo(
 				"test-entry");
 		Assertions.assertThat(lMonitored.getEndpointURI()).as("endpoint uri").isEqualTo(
 				"direct://start");
 		Assertions.assertThat(lMonitored.getExchangeCreated()).as("Exchange created").isNotNull();
+		Assertions.assertThat(lMonitored.getExchangeId()).as("exchange-id").isEqualTo(lExchangeId);
 		Assertions.assertThat(lMonitored.getInitialRouteId()).as("initial route-id").isEqualTo(
 				"test-entry");
 		Assertions.assertThat(lMonitored.getMonitored()).as("monitored timestamp").isNotNull();
 		Assertions.assertThat(lMonitored.getRunningContext()).as("running context").isEqualTo(
 				"normal entry");
+		Assertions.assertThat(lMonitored.getRunId()).as("run-id").isEqualTo(
+				"Mock-Monitor #0 - normal entry");
+
+		MonitoredMessage lInMessage = lMonitored.getInMessage();
+		this.assertInMessage(lInMessage);
+		MonitoredMessage lOutMessage = lMonitored.getOutMessage();
+		this.assertOutMessage(lOutMessage);
+	}
+
+	private void assertInMessage(MonitoredMessage pMessage)
+	{
+		Assertions.assertThat(pMessage).as("in message").isNotNull();
+		Assertions.assertThat(pMessage.getMessageId()).as("message id").isNotEmpty();
+		Assertions.assertThat(pMessage.getBodyClass()).as("body class").isEqualTo(String.class);
+		Assertions.assertThat(pMessage.getBody()).as("body").isEqualTo("start now!");
+	}
+
+	private void assertOutMessage(MonitoredMessage pMessage)
+	{
+		Assertions.assertThat(pMessage).as("out message").isNotNull();
+		Assertions.assertThat(pMessage.getMessageId()).as("message id").isNotEmpty();
+		Assertions.assertThat(pMessage.getBodyClass()).as("body class").isNull();
+		Assertions.assertThat(pMessage.getBody()).as("body").isNull();
 	}
 }
