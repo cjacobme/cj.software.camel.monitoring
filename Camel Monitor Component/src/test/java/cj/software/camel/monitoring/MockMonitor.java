@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.monitor.Monitor;
 
@@ -17,6 +19,10 @@ public class MockMonitor
 
 	private List<MonitoredExchange> monitoredExchanges = new ArrayList<>();
 
+	private Level logLevel;
+
+	private String loggerName;
+
 	@Override
 	public String startNewRunningContext(String pRunningContext)
 	{
@@ -28,9 +34,21 @@ public class MockMonitor
 	@Override
 	public String monitor(MonitorEndpoint pEndpoint, MonitoredExchange pMonitoredExchange)
 	{
+		this.logLevel = pEndpoint.getLogLevel();
+		this.loggerName = pEndpoint.getLoggerName();
 		this.endpoints.add(pEndpoint);
 		this.monitoredExchanges.add(pMonitoredExchange);
 		return null;
+	}
+
+	public Level getLogLevel()
+	{
+		return this.logLevel;
+	}
+
+	public String getLoggerName()
+	{
+		return this.loggerName;
 	}
 
 	public static int getCounter()

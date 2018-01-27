@@ -37,7 +37,7 @@ public class MonitorEndpoint
 	@UriPath(name = "logLevel",
 			description = "Log-Level",
 			defaultValue = "INFO",
-			javaType = "org.apache.logging.log4jLevel")
+			javaType = "org.apache.logging.log4j.Level")
 	private Level logLevel = Level.INFO;
 
 	@UriPath(name = "runningContext",

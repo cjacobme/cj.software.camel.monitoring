@@ -12,6 +12,7 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.logging.log4j.Level;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class MonitorEntryTest
 					.routeId("test-entry")
 					.log("body is ${body}")
 					.to("moni://start?runningContext=normal entry")
-					.to("moni://entry")
+					.to("moni://entry?logLevel=WARN&loggerName=dangerous")
 					.to("mock:monitored")
 				;
 				//@formatter:on
@@ -72,6 +73,11 @@ public class MonitorEntryTest
 		Exchange lExchange = lExchanges.get(0);
 		String lExchangeId = lExchange.getExchangeId();
 		String lCamelContextName = lExchange.getContext().getName();
+
+		Level lLogLevel = this.mockMonitor.getLogLevel();
+		Assertions.assertThat(lLogLevel).as("log level").isEqualTo(Level.WARN);
+		Assertions.assertThat(this.mockMonitor.getLoggerName()).as("logger name").isEqualTo(
+				"dangerous");
 
 		List<MonitoredExchange> lMonitoredExchanges = this.mockMonitor.getMonitoredExchanges();
 		Assertions.assertThat(lMonitoredExchanges).as("list of monitored exchanges").hasSize(1);
@@ -133,8 +139,8 @@ public class MonitorEntryTest
 				.assertThat(pProperties.get("CamelMonitorRunningContext"))
 				.as("Running Context")
 				.isEqualTo("normal entry");
-		Assertions.assertThat(pProperties.get("CamelToEndpoint")).as("to-endpoint").isEqualTo(
-				"moni://entry");
+		String lToEndpoint = (String) pProperties.get("CamelToEndpoint");
+		Assertions.assertThat(lToEndpoint).as("to-endpoint").matches("moni://entry.*");
 	}
 
 	private void assertInMessage(MonitoredMessage pMessage)

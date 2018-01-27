@@ -77,12 +77,6 @@ public class MonitoredMessage
 			return this;
 		}
 
-		public Builder addHeader(String pKey, Object pValue)
-		{
-			this.instance.headers.put(pKey, pValue);
-			return this;
-		}
-
 		public Builder withBody(Object pBody)
 		{
 			if (pBody != null)
