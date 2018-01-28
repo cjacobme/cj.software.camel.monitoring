@@ -49,122 +49,6 @@ public class MonitorStartTest
 	}
 
 	@Test
-	public void runningContextSet() throws Exception
-	{
-		JndiRegistry lRegistry = this.createRegistry();
-		CamelContext lCtx = new DefaultCamelContext(lRegistry);
-		lCtx.addRoutes(new RouteBuilder()
-		{
-
-			@Override
-			public void configure() throws Exception
-			{
-				//@formatter:off
-				from ("direct:start")
-					.routeId("test-running-context")
-					.to("moni://start?loggerName=xyz&runningContext=MeineSchnittstelle")
-				;
-				//@formatter:on
-			}
-		});
-		lCtx.start();
-		try
-		{
-			Thread.sleep(1000l);
-		}
-		finally
-		{
-			lCtx.stop();
-		}
-	}
-
-	@Test
-	public void nullRunningContextFails() throws Exception
-	{
-		JndiRegistry lRegistry = this.createRegistry();
-		CamelContext lCtx = new DefaultCamelContext(lRegistry);
-		lCtx.addRoutes(new RouteBuilder()
-		{
-
-			@Override
-			public void configure() throws Exception
-			{
-				//@formatter:off
-				from ("direct:start")
-					.routeId("test-null-running-context")
-					.to("moni://start?loggerName=xyz")
-				;
-				//@formatter:on
-			}
-		});
-		try
-		{
-			lCtx.start();
-			try
-			{
-				Thread.sleep(1000l);
-			}
-			finally
-			{
-				lCtx.stop();
-			}
-			Assert.fail("expected exception not thrown");
-		}
-		catch (FailedToCreateRouteException pFCRE)
-		{
-			ResolveEndpointFailedException lREFE = (ResolveEndpointFailedException) pFCRE
-					.getCause();
-			IllegalArgumentException lIAE = (IllegalArgumentException) lREFE.getCause();
-			String lMessage = lIAE.getMessage();
-			assertThat(lMessage).as("Message in Exception").isEqualTo(
-					"running context required for moni://start");
-		}
-	}
-
-	@Test
-	public void emptyRunningContextFails() throws Exception
-	{
-		JndiRegistry lRegistry = this.createRegistry();
-		CamelContext lCtx = new DefaultCamelContext(lRegistry);
-		lCtx.addRoutes(new RouteBuilder()
-		{
-
-			@Override
-			public void configure() throws Exception
-			{
-				//@formatter:off
-				from ("direct:start")
-					.routeId("test-empty-running-context")
-					.to("moni://start?runningContext=&loggerName=xyz")
-				;
-				//@formatter:on
-			}
-		});
-		try
-		{
-			lCtx.start();
-			try
-			{
-				Thread.sleep(1000l);
-			}
-			finally
-			{
-				lCtx.stop();
-			}
-			Assert.fail("expected exception not thrown");
-		}
-		catch (FailedToCreateRouteException pFCRE)
-		{
-			ResolveEndpointFailedException lREFE = (ResolveEndpointFailedException) pFCRE
-					.getCause();
-			IllegalArgumentException lIAE = (IllegalArgumentException) lREFE.getCause();
-			String lMessage = lIAE.getMessage();
-			assertThat(lMessage).as("Message in Exception").isEqualTo(
-					"empty running context string");
-		}
-	}
-
-	@Test
 	public void lookupMonitorByReference() throws Exception
 	{
 		JndiRegistry lRegistry = this.createRegistry();
@@ -179,7 +63,7 @@ public class MonitorStartTest
 				//@formatter:off
 				from ("direct:start")
 					.routeId("test-2-monitors")
-					.to("moni://start?runningContext=CheckStartMethod&monitorRef=LoggerMonitor2")
+					.to("moni://start?monitorRef=LoggerMonitor2")
 				;
 				//@formatter:on
 			}
@@ -203,7 +87,7 @@ public class MonitorStartTest
 				//@formatter:off
 				from ("direct:start")
 					.routeId("test-2-monitors")
-					.to("moni://start?runningContext=CheckStartMethod")
+					.to("moni://start?")
 				;
 				//@formatter:on
 			}
@@ -238,7 +122,7 @@ public class MonitorStartTest
 				//@formatter:off
 				from ("direct:start")
 					.routeId("test-2-monitors")
-					.to("moni://start?runningContext=CheckStartMethod")
+					.to("moni://start?")
 				;
 				//@formatter:on
 			}

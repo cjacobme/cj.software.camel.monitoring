@@ -20,8 +20,6 @@ public class MonitorComponent
 
 	public static final String MONITOR = "CamelMonitor";
 
-	public static final String RUNNING_CONTEXT = "CamelMonitorRunningContext";
-
 	@Override
 	protected Endpoint createEndpoint(
 			String pURI,
@@ -54,17 +52,6 @@ public class MonitorComponent
 	{
 		Monitor lMonitor = this.lookupMonitor(pCtx, pEndpoint);
 		pEndpoint.setMonitor(lMonitor);
-
-		String lRunningContext = pEndpoint.getRunningContext();
-		if (lRunningContext == null)
-		{
-			throw new IllegalArgumentException("running context required for moni://start");
-		}
-		lRunningContext = lRunningContext.trim();
-		if (lRunningContext.isEmpty())
-		{
-			throw new IllegalArgumentException("empty running context string");
-		}
 	}
 
 	private Monitor lookupMonitor(CamelContext pCtx, MonitorEndpoint pEndpoint)

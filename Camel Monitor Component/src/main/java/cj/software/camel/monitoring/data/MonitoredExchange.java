@@ -27,8 +27,6 @@ public class MonitoredExchange
 
 	private String currentRouteId;
 
-	private String runningContext;
-
 	private OffsetDateTime exchangeCreated;
 
 	private OffsetDateTime monitored;
@@ -93,11 +91,6 @@ public class MonitoredExchange
 	public MonitoredMessage getInMessage()
 	{
 		return this.inMessage;
-	}
-
-	public String getRunningContext()
-	{
-		return this.runningContext;
 	}
 
 	public MonitoredMessage getOutMessage()
@@ -176,12 +169,6 @@ public class MonitoredExchange
 		public Builder withOutMessage(MonitoredMessage pOutMessage)
 		{
 			this.instance.outMessage = pOutMessage;
-			return this;
-		}
-
-		public Builder withRunningContext(String pRunningContext)
-		{
-			this.instance.runningContext = pRunningContext;
 			return this;
 		}
 

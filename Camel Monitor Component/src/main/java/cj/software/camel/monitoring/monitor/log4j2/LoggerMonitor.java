@@ -2,6 +2,7 @@ package cj.software.camel.monitoring.monitor.log4j2;
 
 import java.util.UUID;
 
+import org.apache.camel.Exchange;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,7 +85,7 @@ public class LoggerMonitor
 	}
 
 	@Override
-	public String startNewRunningContext(String pRunningContext)
+	public String startNewExchange(Exchange pExchange)
 	{
 		String lResult = UUID.randomUUID().toString();
 		return lResult;

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.logging.log4j.Level;
 
 import cj.software.camel.monitoring.data.MonitoredExchange;
@@ -24,9 +26,11 @@ public class MockMonitor
 	private String loggerName;
 
 	@Override
-	public String startNewRunningContext(String pRunningContext)
+	public String startNewExchange(Exchange pExchange)
 	{
-		String lResult = String.format("Mock-Monitor #%d - %s", counter, pRunningContext);
+		CamelContext lContext = pExchange.getContext();
+		String lName = lContext.getName();
+		String lResult = String.format("Mock-Monitor #%d - %s", counter, lName);
 		counter++;
 		return lResult;
 	}

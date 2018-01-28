@@ -60,9 +60,7 @@ public class MonitorProducer
 	{
 		Monitor lMonitor = this.endpoint.getMonitor();
 		pExchange.setProperty(MonitorComponent.MONITOR, lMonitor);
-		String lRunningContext = this.endpoint.getRunningContext();
-		pExchange.setProperty(MonitorComponent.RUNNING_CONTEXT, lRunningContext);
-		String lRunId = lMonitor.startNewRunningContext(lRunningContext);
+		String lRunId = lMonitor.startNewExchange(pExchange);
 		pExchange.setProperty(MonitorComponent.MONITOR_RUN_ID, lRunId);
 	}
 

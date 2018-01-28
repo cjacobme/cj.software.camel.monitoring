@@ -27,7 +27,6 @@ class Converter
 		{
 			lExchangeId = pExchange.getExchangeId();
 		}
-		String lRunningContext = (String) pExchange.getProperty(MonitorComponent.RUNNING_CONTEXT);
 		String lRunId = (String) pExchange.getProperty(MonitorComponent.MONITOR_RUN_ID);
 
 		MonitoredMessage lInMessage = toMonitoredMessage(lIn);
@@ -44,7 +43,6 @@ class Converter
 				.withCurrentRouteId(lUnitOfWork.getRouteContext().getRoute().getId())
 				.withExchangeCreated(Converter.toOffsetDateTime(pExchange.getCreated()))
 				.withMonitored(OffsetDateTime.now(ZoneId.of("UTC")))
-				.withRunningContext(lRunningContext)
 				.withInMessage(lInMessage)
 				.withOutMessage(lOutMessage)
 				.build();

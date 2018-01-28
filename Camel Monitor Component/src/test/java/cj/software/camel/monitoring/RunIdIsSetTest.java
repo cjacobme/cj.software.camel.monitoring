@@ -13,6 +13,7 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -46,6 +47,15 @@ public class RunIdIsSetTest
 		return lResult;
 	}
 
+	@Override
+	protected CamelContext createCamelContext() throws Exception
+	{
+		CamelContext lResult = super.createCamelContext();
+		DefaultCamelContext lAsDefault = (DefaultCamelContext) lResult;
+		lAsDefault.setName("Check Run-IDs set");
+		return lAsDefault;
+	}
+
 	private class MonitorMock
 			implements
 			Monitor
@@ -53,7 +63,7 @@ public class RunIdIsSetTest
 		private boolean called = false;
 
 		@Override
-		public String startNewRunningContext(String pRunningContext)
+		public String startNewExchange(Exchange pExchange)
 		{
 			String lResult = String.format("%d", RunIdIsSetTest.this.clock);
 			this.called = true;
@@ -83,7 +93,7 @@ public class RunIdIsSetTest
 				//@formatter:off
 				from ("direct:start")
 					.routeId("checkRunIdIsSet")
-					.to("moni://start?runningContext=checkRunIdIsSet")
+					.to("moni://start?")
 					.to("mock:monitorStarted")
 				;
 				//@formatter:on

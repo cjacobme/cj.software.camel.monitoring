@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.logging.log4j.Level;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -38,6 +40,15 @@ public class MonitorEntryTest
 	}
 
 	@Override
+	protected CamelContext createCamelContext() throws Exception
+	{
+		CamelContext lResult = super.createCamelContext();
+		DefaultCamelContext lAsDefault = (DefaultCamelContext) lResult;
+		lAsDefault.setName("normal entry");
+		return lResult;
+	}
+
+	@Override
 	public RouteBuilder createRouteBuilder()
 	{
 		RouteBuilder lResult = new RouteBuilder()
@@ -50,7 +61,7 @@ public class MonitorEntryTest
 				from("direct:start")
 					.routeId("test-entry")
 					.log("body is ${body}")
-					.to("moni://start?runningContext=normal entry")
+					.to("moni://start?")
 					.to("moni://entry?logLevel=WARN&loggerName=dangerous")
 					.to("mock:monitored")
 				;
@@ -94,8 +105,6 @@ public class MonitorEntryTest
 		Assertions.assertThat(lMonitored.getInitialRouteId()).as("initial route-id").isEqualTo(
 				"test-entry");
 		Assertions.assertThat(lMonitored.getMonitored()).as("monitored timestamp").isNotNull();
-		Assertions.assertThat(lMonitored.getRunningContext()).as("running context").isEqualTo(
-				"normal entry");
 		Assertions.assertThat(lMonitored.getRunId()).as("run-id").isEqualTo(
 				"Mock-Monitor #0 - normal entry");
 
@@ -118,7 +127,6 @@ public class MonitorEntryTest
 				"CamelMessageHistory",
 				"CamelMonitor",
 				"CamelMonitorRunId",
-				"CamelMonitorRunningContext",
 				"CamelToEndpoint");
 		Assertions
 				.assertThat(pProperties.get("CamelCreatedTimestamp"))
@@ -135,10 +143,6 @@ public class MonitorEntryTest
 		Assertions.assertThat(pProperties.get("CamelMonitor")).isInstanceOf(Monitor.class);
 		Assertions.assertThat(pProperties.get("CamelMonitorRunId")).as("Run-ID").isEqualTo(
 				"Mock-Monitor #0 - normal entry");
-		Assertions
-				.assertThat(pProperties.get("CamelMonitorRunningContext"))
-				.as("Running Context")
-				.isEqualTo("normal entry");
 		String lToEndpoint = (String) pProperties.get("CamelToEndpoint");
 		Assertions.assertThat(lToEndpoint).as("to-endpoint").matches("moni://entry.*");
 	}

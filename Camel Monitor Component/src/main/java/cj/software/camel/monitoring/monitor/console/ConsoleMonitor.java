@@ -2,6 +2,8 @@ package cj.software.camel.monitoring.monitor.console;
 
 import java.util.UUID;
 
+import org.apache.camel.Exchange;
+
 import cj.software.camel.monitoring.MonitorEndpoint;
 import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.monitor.Monitor;
@@ -35,7 +37,7 @@ public class ConsoleMonitor
 	}
 
 	@Override
-	public String startNewRunningContext(String pRunningContext)
+	public String startNewExchange(Exchange pExchange)
 	{
 		String lResult = UUID.randomUUID().toString();
 		return lResult;

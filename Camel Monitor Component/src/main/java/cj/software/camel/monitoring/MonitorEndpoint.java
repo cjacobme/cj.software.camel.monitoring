@@ -40,11 +40,6 @@ public class MonitorEndpoint
 			javaType = "org.apache.logging.log4j.Level")
 	private Level logLevel = Level.INFO;
 
-	@UriPath(name = "runningContext",
-			description = "name of the running context for a group of routes",
-			javaType = "java.lang.String")
-	private String runningContext;
-
 	private Monitor monitor;
 
 	public MonitorEndpoint()
@@ -124,15 +119,5 @@ public class MonitorEndpoint
 	public void setLogLevel(String pLogLevel)
 	{
 		this.setLogLevel(Level.valueOf(pLogLevel));
-	}
-
-	public String getRunningContext()
-	{
-		return this.runningContext;
-	}
-
-	public void setRunningContext(String pRunningContext)
-	{
-		this.runningContext = pRunningContext;
 	}
 }
