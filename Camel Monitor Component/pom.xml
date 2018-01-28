@@ -15,6 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<assertj.version>3.9.0</assertj.version>
+		<cassandra.version>3.3.0</cassandra.version>
 	</properties>
 
 	<dependencyManagement>
@@ -26,6 +27,23 @@
 				<version>2.20.1</version>
 				<scope>import</scope>
 				<type>pom</type>
+			</dependency>
+
+			<!-- Apache Cassandra -->
+			<dependency>
+				<groupId>com.datastax.cassandra</groupId>
+				<artifactId>cassandra-driver-core</artifactId>
+				<version>${cassandra.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.datastax.cassandra</groupId>
+				<artifactId>cassandra-driver-extras</artifactId>
+				<version>${cassandra.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.datastax.cassandra</groupId>
+				<artifactId>cassandra-driver-mapping</artifactId>
+				<version>${cassandra.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -40,6 +58,20 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>apt</artifactId>
+		</dependency>
+
+		<!-- Apache Cassandra -->
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-extras</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-mapping</artifactId>
 		</dependency>
 
 		<!-- logging -->
