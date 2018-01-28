@@ -28,7 +28,7 @@ create type message (
 create table exchange_details (
     camel_context_name text,
     model_run_id timeuuid,
-    id timeuuid,
+    detail_id timeuuid,
     level text,
     camel_exchange_id text,
     endpoint_uri text,
@@ -39,5 +39,5 @@ create table exchange_details (
     in_message frozen<message>,
     out_message frozen<message>,
     properties map<text,text>,
-    primary key ((camel_context_name, model_run_id),id)
+    primary key ((camel_context_name, model_run_id), detail_id)
 );
