@@ -101,10 +101,12 @@ public class CassandraMonitor
 		if (session != null)
 		{
 			session.close();
+			this.logger.info("closed session");
 		}
 		if (cluster != null)
 		{
 			cluster.close();
+			this.logger.info("closed cluster");
 		}
 
 	}

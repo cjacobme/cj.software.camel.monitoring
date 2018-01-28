@@ -10,6 +10,8 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.spi.Registry;
+import org.apache.camel.support.LifecycleStrategySupport;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
@@ -35,7 +37,35 @@ public class SimpleInsertTest
 	{
 		DefaultCamelContext lResult = (DefaultCamelContext) super.createCamelContext();
 		lResult.setName("Simple-Insert-Test");
+		lResult.addLifecycleStrategy(new LifecycleStrategySupport()
+		{
+			@Override
+			public void onContextStop(CamelContext pContext)
+			{
+				tryToStop(pContext);
+			}
+		});
 		return lResult;
+	}
+
+	private void tryToStop(CamelContext pContext)
+	{
+		// TODO how can we do this better?
+		Registry lRegistry = pContext.getRegistry();
+		CassandraMonitor lMonitor = lRegistry.lookupByNameAndType(
+				"Cassandra-Monitor",
+				CassandraMonitor.class);
+		if (lMonitor != null)
+		{
+			try
+			{
+				lMonitor.close();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
