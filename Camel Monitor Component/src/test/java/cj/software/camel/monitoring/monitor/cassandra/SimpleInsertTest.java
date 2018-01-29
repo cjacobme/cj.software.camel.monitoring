@@ -5,6 +5,9 @@ import javax.naming.InitialContext;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -82,11 +85,29 @@ public class SimpleInsertTest
 					.routeId("moni-cassandra")
 					.to("moni://start")
 					.to("moni:entry?loggerName=hugo")
+					.process(new ToUpper())
+					.to("moni:entry?loggerName=karl&logLevel=WARN")
 					.to("mock:finished")
 				;
 				//@formatter:on
 			}
 		};
+	}
+
+	private class ToUpper
+			implements
+			Processor
+	{
+
+		@Override
+		public void process(Exchange pExchange) throws Exception
+		{
+			Message lIn = pExchange.getIn();
+			String lBody = lIn.getBody(String.class);
+			lBody = lBody.toUpperCase();
+			lIn.setBody(lBody);
+		}
+
 	}
 
 	@Test
