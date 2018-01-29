@@ -30,7 +30,7 @@ public class LoggerMonitor
 			lLogger.log(
 					lLevel,
 					"##################                   %s                   ##################",
-					pMonitoredEntity.getExchangeId());
+					pMonitoredEntity.getRunId());
 
 			lLogger.log(lLevel, "Camel Context Name  = %s", pMonitoredEntity.getCamelContextName());
 			lLogger.log(lLevel, "Endpoint-URI        = %s", pMonitoredEntity.getEndpointURI());
@@ -49,7 +49,7 @@ public class LoggerMonitor
 			lLogger.log(lLevel, "");
 		}
 
-		return "log4j2 (" + lLoggerName + ")";
+		return UUID.randomUUID().toString();
 	}
 
 	private void logMessage(MonitoredMessage pMessage, Logger pLogger, Level pLevel)
@@ -89,5 +89,13 @@ public class LoggerMonitor
 	{
 		String lResult = UUID.randomUUID().toString();
 		return lResult;
+	}
+
+	@Override
+	public void finishExchange(String pMonitoringId, Exchange pExchange)
+	{
+		Logger lLogger = LogManager.getFormatterLogger();
+		lLogger.info("<========           %s           ========>", pMonitoringId);
+		lLogger.info("exchange is finished now!");
 	}
 }

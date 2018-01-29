@@ -25,6 +25,8 @@ public class MockMonitor
 
 	private String loggerName;
 
+	private boolean finished = false;
+
 	@Override
 	public String startNewExchange(Exchange pExchange)
 	{
@@ -58,6 +60,11 @@ public class MockMonitor
 	public static int getCounter()
 	{
 		return counter;
+	}
+
+	public boolean isFinished()
+	{
+		return this.finished;
 	}
 
 	public List<MonitorEndpoint> getEndpoints()
@@ -95,6 +102,12 @@ public class MockMonitor
 		this.endpoints.clear();
 		this.monitoredExchanges.clear();
 		counter = 0;
+	}
+
+	@Override
+	public void finishExchange(String pMonitoringId, Exchange pExchange)
+	{
+		this.finished = true;
 	}
 
 }

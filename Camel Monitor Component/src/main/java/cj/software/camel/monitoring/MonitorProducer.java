@@ -49,6 +49,9 @@ public class MonitorProducer
 		case "entry":
 			this.entry(pExchange);
 			break;
+		case "finished":
+			this.finish(pExchange);
+			break;
 		default:
 			throw new UnsupportedOperationException("unknown URI-Part:" + lInitialUriPart);
 		}
@@ -69,5 +72,12 @@ public class MonitorProducer
 		MonitoredExchange lMonitoredExchange = Converter.toMonitoredExchange(pExchange);
 		Monitor lMonitor = (Monitor) pExchange.getProperty(MonitorComponent.MONITOR);
 		lMonitor.monitor(this.endpoint, lMonitoredExchange);
+	}
+
+	private void finish(Exchange pExchange)
+	{
+		Monitor lMonitor = (Monitor) pExchange.getProperty(MonitorComponent.MONITOR);
+		String lMonitoringId = pExchange.getProperty(MonitorComponent.MONITOR_RUN_ID, String.class);
+		lMonitor.finishExchange(lMonitoringId, pExchange);
 	}
 }

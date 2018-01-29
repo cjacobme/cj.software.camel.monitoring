@@ -80,6 +80,11 @@ public class RunIdIsSetTest
 		{
 			return null;
 		}
+
+		@Override
+		public void finishExchange(String pMonitoringId, Exchange pExchange)
+		{
+		}
 	}
 
 	@Override

@@ -87,6 +87,7 @@ public class SimpleInsertTest
 					.to("moni:entry?loggerName=hugo")
 					.process(new ToUpper())
 					.to("moni:entry?loggerName=karl&logLevel=WARN")
+					.to("moni:finished")
 					.to("mock:finished")
 				;
 				//@formatter:on

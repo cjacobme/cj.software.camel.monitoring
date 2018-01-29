@@ -22,7 +22,7 @@ import cj.software.camel.monitoring.data.MonitoredExchange;
 import cj.software.camel.monitoring.data.MonitoredMessage;
 import cj.software.camel.monitoring.monitor.Monitor;
 
-public class MonitorEntryTest
+public class MonitorSuccessfulExecutionTest
 		extends MonitorTest
 {
 	private MockMonitor mockMonitor = new MockMonitor();
@@ -31,7 +31,10 @@ public class MonitorEntryTest
 	private ProducerTemplate producerTemplate;
 
 	@EndpointInject(uri = "mock:monitored")
-	private MockEndpoint mockEndpoint;
+	private MockEndpoint mockMonitored;
+
+	@EndpointInject(uri = "mock:finished")
+	private MockEndpoint mockFinished;
 
 	@Override
 	protected Monitor getMonitor()
@@ -64,6 +67,8 @@ public class MonitorEntryTest
 					.to("moni://start?")
 					.to("moni://entry?logLevel=WARN&loggerName=dangerous")
 					.to("mock:monitored")
+					.to("moni://finished")
+					.to("mock:finished")
 				;
 				//@formatter:on
 
@@ -75,11 +80,16 @@ public class MonitorEntryTest
 	@Test
 	public void entryFilled() throws InterruptedException
 	{
-		this.mockEndpoint.expectedMessageCount(1);
+		this.mockMonitored.expectedMessageCount(1);
+		this.mockFinished.expectedMessageCount(1);
 		this.producerTemplate.sendBody("start now!");
-		this.mockEndpoint.assertIsSatisfied();
+		MockEndpoint.assertIsSatisfied(this.mockMonitored, this.mockFinished);
+		this.assertMonitored();
+	}
 
-		List<Exchange> lExchanges = this.mockEndpoint.getExchanges();
+	private void assertMonitored()
+	{
+		List<Exchange> lExchanges = this.mockMonitored.getExchanges();
 		Assertions.assertThat(lExchanges).as("list of Exchanges").hasSize(1);
 		Exchange lExchange = lExchanges.get(0);
 		String lExchangeId = lExchange.getExchangeId();

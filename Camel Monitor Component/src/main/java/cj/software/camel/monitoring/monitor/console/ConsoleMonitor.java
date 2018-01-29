@@ -28,7 +28,7 @@ public class ConsoleMonitor
 			System.out.println();
 			System.out.println();
 		}
-		return "System.out";
+		return UUID.randomUUID().toString();
 	}
 
 	private void print(String pResource, Object pEntry)
@@ -41,5 +41,11 @@ public class ConsoleMonitor
 	{
 		String lResult = UUID.randomUUID().toString();
 		return lResult;
+	}
+
+	@Override
+	public void finishExchange(String pMonitoringId, Exchange pExchange)
+	{
+		System.out.println("Exchange is finished:" + pMonitoringId);
 	}
 }

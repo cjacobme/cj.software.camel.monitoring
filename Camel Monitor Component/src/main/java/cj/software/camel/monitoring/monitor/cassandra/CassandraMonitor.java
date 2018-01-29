@@ -2,19 +2,23 @@ package cj.software.camel.monitoring.monitor.cassandra;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.datastax.driver.core.BatchStatement;
+import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
+import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.UUIDs;
 import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
@@ -68,7 +72,8 @@ public class CassandraMonitor
 		String lResult = lTimebasedUUID.toString();
 		String lCamelContextName = pExchange.getContext().getName();
 		String lCamelExchangeId = pExchange.getExchangeId();
-		Instant lStart = OffsetDateTime.now().toInstant();
+		Date lExchStart = pExchange.getCreated();
+		Instant lStart = lExchStart.toInstant();
 		ModelRunIDsByContextName lModelRunIDsByContextName = ModelRunIDsByContextName
 				.builder()
 				.withCamelContextName(lCamelContextName)
@@ -197,6 +202,47 @@ public class CassandraMonitor
 			this.logger.info("closed cluster");
 		}
 
+	}
+
+	@Override
+	public void finishExchange(String pMonitoringId, Exchange pExchange)
+	{
+		UUID lMonitoringUUID = UUID.fromString(pMonitoringId);
+		CamelContext lCtx = pExchange.getContext();
+		String lContextName = lCtx.getName();
+		Date lExchStart = pExchange.getCreated();
+		Instant lStart = lExchStart.toInstant();
+
+		BatchStatement lBatch = new BatchStatement();
+
+		Instant lNow = Instant.now();
+
+		PreparedStatement lPrep1 = session.prepare(
+				"UPDATE model_run_ids_by_context_name "
+						+ "SET running_state = ?, finish=? "
+						+ "WHERE camel_context_name = ? "
+						+ "AND model_run_id = ?");
+		BoundStatement lBound1 = lPrep1.bind(
+				RunningState.FINISHED_SUCCESS,
+				lNow,
+				lContextName,
+				lMonitoringUUID);
+		lBatch.add(lBound1);
+
+		PreparedStatement lPrep2 = session.prepare(
+				"UPDATE model_run_starts_by_context_name "
+						+ "SET running_state = ?, finish = ? "
+						+ "WHERE camel_context_name = ? "
+						+ "AND start = ?");
+		BoundStatement lBound2 = lPrep2.bind(
+				RunningState.FINISHED_SUCCESS,
+				lNow,
+				lContextName,
+				lStart);
+		lBatch.add(lBound2);
+
+		session.execute(lBatch);
+		// TODO 2. Tabelle auch noch und beide im Batch
 	}
 
 }
