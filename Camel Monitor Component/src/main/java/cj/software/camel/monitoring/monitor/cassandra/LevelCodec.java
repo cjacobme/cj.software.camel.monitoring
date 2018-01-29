@@ -21,16 +21,35 @@ public class LevelCodec
 	public ByteBuffer serialize(Level pValue, ProtocolVersion pProtocolVersion)
 			throws InvalidTypeException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ByteBuffer lResult;
+		if (pValue != null)
+		{
+			String lString = pValue.toString();
+			byte[] lBytes = lString.getBytes();
+			lResult = ByteBuffer.wrap(lBytes);
+		}
+		else
+		{
+			lResult = null;
+		}
+		return lResult;
 	}
 
 	@Override
 	public Level deserialize(ByteBuffer pBytes, ProtocolVersion pProtocolVersion)
 			throws InvalidTypeException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Level lResult;
+		if (pBytes != null)
+		{
+			String lString = new String(pBytes.array());
+			lResult = Level.valueOf(lString);
+		}
+		else
+		{
+			lResult = null;
+		}
+		return lResult;
 	}
 
 	@Override
