@@ -17,6 +17,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.UUIDs;
+import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
@@ -53,6 +54,7 @@ public class CassandraMonitor
 			CodecRegistry lRegister = cluster.getConfiguration().getCodecRegistry();
 			lRegister.register(InstantCodec.instance);
 			lRegister.register(new LevelCodec());
+			lRegister.register(new EnumNameCodec<RunningState>(RunningState.class));
 			session = cluster.connect(pKeyspaceName);
 			this.logger.info("opened session on keyspace \"%s\"", pKeyspaceName);
 			mappingManager = new MappingManager(session);

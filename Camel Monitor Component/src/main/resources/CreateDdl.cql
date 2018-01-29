@@ -4,7 +4,7 @@ CREATE TABLE model_run_ids_by_context_name (
     camel_exchange_id text,
     start timestamp,
     finish timestamp, 
-    successful boolean,
+    running_state text,
     PRIMARY KEY ((camel_context_name), model_run_id)
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE model_run_starts_by_context_name (
     start timestamp,
     finish timestamp, 
     model_run_id timeuuid,
-    successful boolean, 
+    running_state text, 
     PRIMARY KEY ((camel_context_name), start)
 );
 

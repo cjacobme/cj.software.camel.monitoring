@@ -33,8 +33,8 @@ public class ModelRunIDsByContextName
 	@Column(name = "finish")
 	private Instant finish;
 
-	@Column(name = "successful")
-	private boolean successful = true; // TODO: 3 States RUNNING, FINISHED_SUCCESS, FINISHED_FAIL
+	@Column(name = "running_state")
+	private RunningState runningState = RunningState.RUNNING;
 
 	private ModelRunIDsByContextName()
 	{
@@ -65,9 +65,9 @@ public class ModelRunIDsByContextName
 		return this.finish;
 	}
 
-	public boolean isSuccessful()
+	public RunningState getRunningState()
 	{
-		return this.successful;
+		return this.runningState;
 	}
 
 	public static Builder builder()
@@ -111,12 +111,6 @@ public class ModelRunIDsByContextName
 		public Builder withFinish(Instant pFinish)
 		{
 			this.instance.finish = pFinish;
-			return this;
-		}
-
-		public Builder withSuccessful(boolean pSuccessful)
-		{
-			this.instance.successful = pSuccessful;
 			return this;
 		}
 

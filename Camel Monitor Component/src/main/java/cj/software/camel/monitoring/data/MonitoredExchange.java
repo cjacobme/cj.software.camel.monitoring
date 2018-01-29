@@ -37,8 +37,6 @@ public class MonitoredExchange
 
 	private Map<String, Object> properties = new HashMap<>();
 
-	// TODO: Properties etc
-
 	private MonitoredExchange()
 	{
 	}

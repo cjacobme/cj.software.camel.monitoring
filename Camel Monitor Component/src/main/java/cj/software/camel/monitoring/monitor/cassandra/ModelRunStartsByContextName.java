@@ -28,8 +28,8 @@ public class ModelRunStartsByContextName
 	@Column(name = "model_run_id")
 	private UUID modelRunId;
 
-	@Column(name = "successful")
-	private boolean successful = true; // TODO 3 states.
+	@Column(name = "running_state")
+	private RunningState runningState = RunningState.RUNNING;
 
 	private ModelRunStartsByContextName()
 	{
@@ -60,9 +60,9 @@ public class ModelRunStartsByContextName
 		return this.modelRunId;
 	}
 
-	public boolean isSuccessful()
+	public RunningState getRunningState()
 	{
-		return this.successful;
+		return this.runningState;
 	}
 
 	public static Builder builder()
@@ -106,12 +106,6 @@ public class ModelRunStartsByContextName
 		public Builder withFinish(Instant pFinish)
 		{
 			this.instance.finish = pFinish;
-			return this;
-		}
-
-		public Builder withSuccessful(boolean pSuccessful)
-		{
-			this.instance.successful = pSuccessful;
 			return this;
 		}
 
