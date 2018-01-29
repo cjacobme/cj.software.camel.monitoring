@@ -99,6 +99,7 @@ public class CassandraMonitor
 	{
 		UUID lDetailId = UUIDs.timeBased();
 		Level lLevel = pEndpoint.getLogLevel();
+		String lLoggerName = pEndpoint.getLoggerName();
 		Instant lExchangeCreated = this.toInstant(pMonitoredExchange.getExchangeCreated());
 		Instant lMonitored = this.toInstant(pMonitoredExchange.getMonitored());
 		Message lInMessage = this.toMessage(pMonitoredExchange.getInMessage());
@@ -110,7 +111,8 @@ public class CassandraMonitor
 				.withCamelContextName(pMonitoredExchange.getCamelContextName())
 				.withModelRunId(UUID.fromString(pMonitoredExchange.getRunId()))
 				.withDetailId(lDetailId)
-				.withLevel(lLevel) // TODO loggerName fehlt noch
+				.withLevel(lLevel)
+				.withLoggerName(lLoggerName)
 				.withCamelExchangeId(pMonitoredExchange.getExchangeId())
 				.withEndpointUri(pMonitoredExchange.getEndpointURI())
 				.withInitialRouteId(pMonitoredExchange.getInitialRouteId())

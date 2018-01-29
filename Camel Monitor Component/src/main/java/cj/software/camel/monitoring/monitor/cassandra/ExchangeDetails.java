@@ -29,6 +29,9 @@ public class ExchangeDetails
 	@Column(name = "level")
 	private Level level;
 
+	@Column(name = "logger_name")
+	private String loggerName;
+
 	@Column(name = "camel_exchange_id")
 	private String camelExchangeId;
 
@@ -78,6 +81,11 @@ public class ExchangeDetails
 	public Level getLevel()
 	{
 		return this.level;
+	}
+
+	public String getLoggerName()
+	{
+		return this.loggerName;
 	}
 
 	public String getCamelExchangeId()
@@ -160,6 +168,12 @@ public class ExchangeDetails
 		public Builder withLevel(Level pLevel)
 		{
 			this.instance.level = pLevel;
+			return this;
+		}
+
+		public Builder withLoggerName(String pLoggerName)
+		{
+			this.instance.loggerName = pLoggerName;
 			return this;
 		}
 

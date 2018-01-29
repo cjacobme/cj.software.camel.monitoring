@@ -30,6 +30,7 @@ create table exchange_details (
     model_run_id timeuuid,
     detail_id timeuuid,
     level text,
+    logger_name text,
     camel_exchange_id text,
     endpoint_uri text,
     initial_route_id text,
